@@ -29,7 +29,7 @@ spec:
       sources:
         - path: charts/ingress-nginx
           repoURL: "https://github.com/christensenjairus/ArgoCD-Infra"
-          targetRevision: master
+          targetRevision: main
           helm:
             releaseName: 'ingress-nginx-{{.exposure}}'
 #            valueFiles:
