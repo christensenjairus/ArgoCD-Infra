@@ -103,9 +103,6 @@ spec:
         name: '{{.nameNormalized}}'
       project: default
       sources:
-      - path: ingress/manifests
-        repoURL: "https://github.com/christensenjairus/ArgoCD-Infra"
-        targetRevision: main
       - chart: ingress-nginx
         repoURL: "https://kubernetes.github.io/ingress-nginx"
         targetRevision: 4.11.3
