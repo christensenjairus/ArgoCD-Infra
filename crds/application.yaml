@@ -6,7 +6,7 @@ metadata:
 spec:
   destination:
     namespace: default
-    name: in-cluster
+    name: argocd-sandbox
   project: default
   source:
     path: crds/manifests

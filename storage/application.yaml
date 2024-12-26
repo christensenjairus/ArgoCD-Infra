@@ -8,7 +8,7 @@ metadata:
 spec:
   destination:
     namespace: rook-ceph
-    name: in-cluster
+    name: argocd-sandbox
   project: default
   sources:
     - chart: rook-ceph
@@ -42,7 +42,7 @@ metadata:
 spec:
   destination:
     namespace: rook-ceph-external
-    name: in-cluster
+    name: argocd-sandbox
   project: default
   source:
     path: storage/manifests
