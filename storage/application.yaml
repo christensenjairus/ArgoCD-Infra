@@ -10,16 +10,27 @@ spec:
     namespace: rook-ceph
     name: in-cluster
   project: default
-  source:
-    path: storage/rook-operator
-    repoURL: "https://github.com/christensenjairus/ArgoCD-Infra"
-    targetRevision: main
+  sources:
+    - chart: rook-ceph
+      repoURL: "https://charts.rook.io/release"
+      targetRevision: v1.16.0
+      helm:
+        releaseName: rook-ceph
+        valueFiles:
+          - $values/storage/values.yaml
+    - repoURL: 'https://github.com/christensenjairus/ArgoCD-Infra.git'
+      targetRevision: main
+      ref: values
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+    managedNamespaceMetadata:
+      labels:
+        toolkit.fluxcd.io/tenant: sre-team
+        goldilocks.fairwinds.com/enabled: "true"
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -30,16 +41,15 @@ metadata:
     argocd.argoproj.io/sync-wave: "1"
 spec:
   destination:
-    namespace: rook-ceph-external
+    namespace: rook-ceph-manifests
     name: in-cluster
   project: default
   source:
-    path: storage/rook-external
+    path: storage/manifests
     repoURL: "https://github.com/christensenjairus/ArgoCD-Infra"
     targetRevision: main
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
+    syncOptions: {}

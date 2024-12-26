@@ -7,7 +7,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "0"
 spec:
   destination:
-    namespace: ingress-nginx
+    namespace: ingress-nginx-public
     name: in-cluster
   project: default
   source:
@@ -20,6 +20,10 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+    managedNamespaceMetadata:
+      labels:
+        toolkit.fluxcd.io/tenant: sre-team
+        goldilocks.fairwinds.com/enabled: "true"
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -30,7 +34,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "1"
 spec:
   destination:
-    namespace: ingress-nginx
+    namespace: ingress-nginx-public
     name: in-cluster
   project: default
   sources:
@@ -38,8 +42,8 @@ spec:
     repoURL: "https://kubernetes.github.io/ingress-nginx"
     targetRevision: 4.11.3
     helm:
-      releaseName: ingress-nginx
-      valuesFiles:
+      releaseName: ingress-nginx-public
+      valueFiles:
         - $values/ingress/values.yaml
       valuesObject:
         controller:
@@ -52,14 +56,14 @@ spec:
           ingressClass: nginx-public
           metrics:
             serviceMonitor:
-              namespace: ingress-nginx-private
+              namespace: ingress-nginx-public
               namespaceSelector:
                 matchNames:
-                  - ingress-nginx-private
+                  - ingress-nginx-public
           # Should be dynamic
           service:
             annotations:
-              metallb.universe.tf/loadBalancerIPs: 10.0.7.200
+              metallb.universe.tf/loadBalancerIPs: 10.0.8.200,2607:fa18:47fd:800:34::200 # fixme
   - repoURL: 'https://github.com/christensenjairus/ArgoCD-Infra.git'
     targetRevision: main
     ref: values
@@ -67,5 +71,4 @@ spec:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
+    syncOptions: {}
