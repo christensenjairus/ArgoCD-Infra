@@ -33,10 +33,36 @@ spec:
     namespace: ingress-nginx
     name: in-cluster
   project: default
-  source:
-    path: ingress/chart
-    repoURL: "https://github.com/christensenjairus/ArgoCD-Infra"
+  sources:
+  - chart: ingress-nginx
+    repoURL: "https://kubernetes.github.io/ingress-nginx"
+    targetRevision: 4.11.3
+    helm:
+      releaseName: ingress-nginx
+      valuesFiles:
+        - $values/ingress/values.yaml
+      valuesObject:
+        controller:
+          extraArgs:
+            tcp-services-configmap: ingress-nginx-public/tcp-services
+            udp-services-configmap: ingress-nginx-public/udp-services
+          ingressClassResource:
+            name: nginx-public
+            controllerValue: k8s.io/nginx-public
+          ingressClass: nginx-public
+          metrics:
+            serviceMonitor:
+              namespace: ingress-nginx-private
+              namespaceSelector:
+                matchNames:
+                  - ingress-nginx-private
+          # Should be dynamic
+          service:
+            annotations:
+              metallb.universe.tf/loadBalancerIPs: 10.0.7.200
+  - repoURL: 'https://github.com/christensenjairus/ArgoCD-Infra.git'
     targetRevision: main
+    ref: values
   syncPolicy:
     automated:
       prune: true
