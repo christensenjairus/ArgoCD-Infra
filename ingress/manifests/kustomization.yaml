@@ -5,6 +5,7 @@ resources:
   - cache-pvc.yaml
   - prometheus-rules.yaml
   - ./tcp-udp-forwards
+  - dashboards
 
 configurations:
   - kustomizeconfig.yaml
