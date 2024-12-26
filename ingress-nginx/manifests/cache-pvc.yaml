@@ -4,9 +4,10 @@ metadata:
   name: ingress-nginx-cache
 spec:
   accessModes:
-    - ReadWriteMany
+    #- ReadWriteMany # fixme
+    - ReadWriteOnce
   resources:
     requests:
       storage: 5Gi
   volumeMode: Filesystem
-  storageClassName: 'k8s-cephfs'
+  # storageClassName: 'k8s-cephfs' # fixme
