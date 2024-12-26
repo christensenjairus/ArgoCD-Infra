@@ -3,21 +3,28 @@ kind: ApplicationSet
 metadata:
   name: infra-ingress-prerequisites
 spec:
+  goTemplate: true
+  goTemplateOptions: [ "missingkey=error" ]
   generators:
-    - list:
-        elements:
-          - cluster: 'argocd-sandbox'
-            ingress-ip: '10.0.8.200,2607:fa18:47fd:800:34::200'
+    - matrix:
+        generators:
+          - clusters: {}
+          - list:
+              elements:
+                - exposure: public
+                  endingIP: 200
+                - exposure: private
+                  endingIP: 201
   template:
     metadata:
-      name: '{{.cluster}}-infra-ingress-prerequisites'
+      name: 'infra-ingress-{{.exposure}}-prerequisites-{{.nameNormalized}}'
       namespace: argocd
       annotations:
         argocd.argoproj.io/sync-wave: "0"
     spec:
       destination:
-        namespace: ingress-nginx-public
-        name: in-cluster
+        namespace: 'ingress-nginx-{{.exposure}}'
+        name: '{{.nameNormalized}}'
       project: default
       source:
         path: ingress/manifests
@@ -39,33 +46,59 @@ kind: ApplicationSet
 metadata:
   name: infra-ingress
 spec:
+  goTemplate: true
+  goTemplateOptions: [ "missingkey=error" ]
   generators:
-    - clusters: {}
-    - list:
-        elements:
-          - exposure: public
-          - exposure: private
+    - matrix:
+        generators:
+          - clusters: {}
+          - list:
+              elements:
+                - exposure: public
+                  endingIP: 200
+                  sourceRange: '0.0.0.0/0,::/0'
+                - exposure: private
+                  endingIP: 201
+                  sourceRange: '10.0.0.0/8,2607:fa18:47fd::/48'
   template:
     metadata:
-      name: '{{cluster}}-infra-ingress'
+      name: 'infra-ingress-{{.exposure}}-{{.nameNormalized}}'
       namespace: argocd
       annotations:
         argocd.argoproj.io/sync-wave: "1"
     spec:
       destination:
-        namespace: ingress-nginx-public
-        name: in-cluster
+        namespace: 'ingress-nginx-{{.exposure}}'
+        name: '{{.nameNormalized}}'
       project: default
       sources:
       - chart: ingress-nginx
         repoURL: "https://kubernetes.github.io/ingress-nginx"
         targetRevision: 4.11.3
         helm:
-          releaseName: ingress-nginx-public
+          releaseName: 'ingress-nginx-{{.exposure}}'
           valueFiles:
             - $values/ingress/values.yaml
-            - $values/ingress/values-{.exposure}.yaml
-            - $values/ingress/values-{.cluster}.yaml
+          valuesObject:
+            controller:
+              config:
+                whitelist-source-range: '{{.sourceRange}}'
+              extraArgs:
+                tcp-services-configmap: 'ingress-nginx-{{.exposure}}/tcp-services'
+                udp-services-configmap: 'ingress-nginx-{{.exposure}}/udp-services'
+              ingressClassResource:
+                name: 'nginx-{{.exposure}}'
+                controllerValue: 'k8s.io/nginx-{{.exposure}}'
+              ingressClass: 'nginx-{{.exposure}}'
+              metrics:
+                serviceMonitor:
+                  namespace: 'ingress-nginx-{{.exposure}}'
+                  namespaceSelector:
+                    matchNames:
+                      - 'ingress-nginx-{{.exposure}}'
+              service:
+                annotations:
+                  metallb.universe.tf/loadBalancerIPs: '{{.metadata.annotations.ipv4LbPrefix}}.{{.endingIP}},{{.metadata.annotations.ipv6LbPrefix}}::{{.endingIP}}'
       - repoURL: 'https://github.com/christensenjairus/ArgoCD-Infra.git'
         targetRevision: main
         ref: values
