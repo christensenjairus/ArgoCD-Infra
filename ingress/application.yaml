@@ -12,9 +12,7 @@ spec:
           - list:
               elements:
                 - exposure: public
-                  endingIP: 200
                 - exposure: private
-                  endingIP: 201
   template:
     metadata:
       name: 'infra-ingress-{{.exposure}}-prerequisites-{{.nameNormalized}}'
@@ -55,10 +53,10 @@ spec:
           - list:
               elements:
                 - exposure: public
-                  endingIP: 200
+                  lbLastOctetIP: 200
                   sourceRange: '0.0.0.0/0,::/0'
                 - exposure: private
-                  endingIP: 201
+                  lbLastOctetIP: 201
                   sourceRange: '10.0.0.0/8,2607:fa18:47fd::/48'
   template:
     metadata:
@@ -72,6 +70,9 @@ spec:
         name: '{{.nameNormalized}}'
       project: default
       sources:
+      - path: ingress/manifests
+        repoURL: "https://github.com/christensenjairus/ArgoCD-Infra"
+        targetRevision: main
       - chart: ingress-nginx
         repoURL: "https://kubernetes.github.io/ingress-nginx"
         targetRevision: 4.11.3
@@ -98,7 +99,7 @@ spec:
                       - 'ingress-nginx-{{.exposure}}'
               service:
                 annotations:
-                  metallb.universe.tf/loadBalancerIPs: '{{.metadata.annotations.ipv4LbPrefix}}.{{.endingIP}},{{.metadata.annotations.ipv6LbPrefix}}::{{.endingIP}}'
+                  metallb.universe.tf/loadBalancerIPs: '{{.metadata.annotations.ipv4LbPrefix}}.{{.lbLastOctetIP}},{{.metadata.annotations.ipv6LbPrefix}}::{{.lbLastOctetIP}}'
       - repoURL: 'https://github.com/christensenjairus/ArgoCD-Infra.git'
         targetRevision: main
         ref: values
