@@ -1,0 +1,45 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ingress-nginx-kustomization
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  destination:
+    namespace: ingress-nginx
+    name: in-cluster
+  project: default
+  source:
+    path: ingress-nginx/kustomization
+    repoURL: "https://github.com/christensenjairus/ArgoCD-Infra"
+    targetRevision: main
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ingress-nginx-chart
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  destination:
+    namespace: ingress-nginx
+    name: in-cluster
+  project: default
+  source:
+    path: ingress-nginx/chart
+    repoURL: "https://github.com/christensenjairus/ArgoCD-Infra"
+    targetRevision: main
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
