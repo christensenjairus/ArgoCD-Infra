@@ -379,7 +379,7 @@ controller:
   podAnnotations:
     prometheus.io/port: "10254"
     prometheus.io/scrape: "true"
-  replicaCount: 1 # fixme
+  replicaCount: 3
   # -- Minimum available pods set in PodDisruptionBudget.
   # Define either 'minAvailable' or 'maxUnavailable', never both.
   minAvailable: 1
