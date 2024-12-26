@@ -41,7 +41,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "1"
 spec:
   destination:
-    namespace: rook-ceph-manifests
+    namespace: rook-ceph-external
     name: in-cluster
   project: default
   source:
@@ -52,4 +52,9 @@ spec:
     automated:
       prune: true
       selfHeal: true
-    syncOptions: {}
+    syncOptions:
+      - CreateNamespace=true
+    managedNamespaceMetadata:
+      labels:
+        toolkit.fluxcd.io/tenant: sre-team
+        goldilocks.fairwinds.com/enabled: "true"

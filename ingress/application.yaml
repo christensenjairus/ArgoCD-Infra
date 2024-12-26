@@ -1,74 +1,76 @@
 apiVersion: argoproj.io/v1alpha1
-kind: Application
+kind: ApplicationSet
 metadata:
   name: infra-ingress-prerequisites
-  namespace: argocd
-  annotations:
-    argocd.argoproj.io/sync-wave: "0"
 spec:
-  destination:
-    namespace: ingress-nginx-public
-    name: in-cluster
-  project: default
-  source:
-    path: ingress/manifests
-    repoURL: "https://github.com/christensenjairus/ArgoCD-Infra"
-    targetRevision: main
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
-    managedNamespaceMetadata:
-      labels:
-        toolkit.fluxcd.io/tenant: sre-team
-        goldilocks.fairwinds.com/enabled: "true"
+  generators:
+    - list:
+        elements:
+          - cluster: 'argocd-sandbox'
+            ingress-ip: '10.0.8.200,2607:fa18:47fd:800:34::200'
+  template:
+    metadata:
+      name: '{{.cluster}}-infra-ingress-prerequisites'
+      namespace: argocd
+      annotations:
+        argocd.argoproj.io/sync-wave: "0"
+    spec:
+      destination:
+        namespace: ingress-nginx-public
+        name: in-cluster
+      project: default
+      source:
+        path: ingress/manifests
+        repoURL: "https://github.com/christensenjairus/ArgoCD-Infra"
+        targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+        managedNamespaceMetadata:
+          labels:
+            toolkit.fluxcd.io/tenant: sre-team
+            goldilocks.fairwinds.com/enabled: "true"
 ---
 apiVersion: argoproj.io/v1alpha1
-kind: Application
+kind: ApplicationSet
 metadata:
   name: infra-ingress
-  namespace: argocd
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
 spec:
-  destination:
-    namespace: ingress-nginx-public
-    name: in-cluster
-  project: default
-  sources:
-  - chart: ingress-nginx
-    repoURL: "https://kubernetes.github.io/ingress-nginx"
-    targetRevision: 4.11.3
-    helm:
-      releaseName: ingress-nginx-public
-      valueFiles:
-        - $values/ingress/values.yaml
-      valuesObject:
-        controller:
-          extraArgs:
-            tcp-services-configmap: ingress-nginx-public/tcp-services
-            udp-services-configmap: ingress-nginx-public/udp-services
-          ingressClassResource:
-            name: nginx-public
-            controllerValue: k8s.io/nginx-public
-          ingressClass: nginx-public
-          metrics:
-            serviceMonitor:
-              namespace: ingress-nginx-public
-              namespaceSelector:
-                matchNames:
-                  - ingress-nginx-public
-          # Should be dynamic
-          service:
-            annotations:
-              metallb.universe.tf/loadBalancerIPs: 10.0.8.200,2607:fa18:47fd:800:34::200 # fixme
-  - repoURL: 'https://github.com/christensenjairus/ArgoCD-Infra.git'
-    targetRevision: main
-    ref: values
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions: {}
+  generators:
+    - clusters: {}
+    - list:
+        elements:
+          - exposure: public
+          - exposure: private
+  template:
+    metadata:
+      name: '{{cluster}}-infra-ingress'
+      namespace: argocd
+      annotations:
+        argocd.argoproj.io/sync-wave: "1"
+    spec:
+      destination:
+        namespace: ingress-nginx-public
+        name: in-cluster
+      project: default
+      sources:
+      - chart: ingress-nginx
+        repoURL: "https://kubernetes.github.io/ingress-nginx"
+        targetRevision: 4.11.3
+        helm:
+          releaseName: ingress-nginx-public
+          valueFiles:
+            - $values/ingress/values.yaml
+            - $values/ingress/values-{.exposure}.yaml
+            - $values/ingress/values-{.cluster}.yaml
+      - repoURL: 'https://github.com/christensenjairus/ArgoCD-Infra.git'
+        targetRevision: main
+        ref: values
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions: []
