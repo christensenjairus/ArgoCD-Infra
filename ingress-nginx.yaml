@@ -1,81 +1,9 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: infra-ingress-prerequisites
-spec:
-  goTemplate: true
-  goTemplateOptions: [ "missingkey=error" ]
-  generators:
-    - matrix:
-        generators:
-          - clusters: {}
-          - list:
-              elements:
-                - exposure: public
-                - exposure: private
-  template:
-    metadata:
-      name: 'infra-ingress-{{.exposure}}-prerequisites-{{.nameNormalized}}'
-      namespace: argocd
-      annotations:
-        argocd.argoproj.io/sync-wave: "0"
-    spec:
-      destination:
-        namespace: 'ingress-nginx-{{.exposure}}'
-        name: '{{.nameNormalized}}'
-      project: default
-      source:
-        path: ingress/manifests
-        repoURL: "https://github.com/christensenjairus/ArgoCD-Infra"
-        targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
-        managedNamespaceMetadata:
-          labels:
-            toolkit.fluxcd.io/tenant: sre-team
-            goldilocks.fairwinds.com/enabled: "true"
----
-apiVersion: argoproj.io/v1alpha1
-kind: ApplicationSet
-metadata:
-  name: infra-ingress-dashboards
-spec:
-  goTemplate: true
-  goTemplateOptions: [ "missingkey=error" ]
-  generators:
-    - matrix:
-        generators:
-          - clusters: {}
-          - list:
-              elements:
-                - exposure: public # only make these for public ingresses
-  template:
-    metadata:
-      name: 'infra-ingress-dashboards-{{.nameNormalized}}'
-      namespace: argocd
-    spec:
-      destination:
-        namespace: 'ingress-nginx-{{.exposure}}'
-        name: '{{.nameNormalized}}'
-      project: default
-      source:
-        path: ingress/dashboards
-        repoURL: "https://github.com/christensenjairus/ArgoCD-Infra"
-        targetRevision: main
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions: []
----
-apiVersion: argoproj.io/v1alpha1
-kind: ApplicationSet
-metadata:
-  name: infra-ingress
+  name: ingress-nginx
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   goTemplate: true
   goTemplateOptions: [ "missingkey=error" ]
@@ -93,7 +21,7 @@ spec:
                   sourceRange: '10.0.0.0/8,2607:fa18:47fd::/48'
   template:
     metadata:
-      name: 'infra-ingress-{{.exposure}}-{{.nameNormalized}}'
+      name: 'ingress-nginx-{{.exposure}}-{{.nameNormalized}}'
       namespace: argocd
       annotations:
         argocd.argoproj.io/sync-wave: "1"

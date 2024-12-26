@@ -1,15 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: infra-crds
+  name: rook-ceph-external
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   destination:
-    namespace: default
+    namespace: rook-ceph-external
     name: argocd-sandbox
   project: default
   source:
-    path: crds/manifests
+    path: rook-ceph-external
     repoURL: "https://github.com/christensenjairus/ArgoCD-Infra"
     targetRevision: main
   syncPolicy:
@@ -17,4 +19,8 @@ spec:
       prune: true
       selfHeal: true
     syncOptions:
-      - ServerSideApply=true
+      - CreateNamespace=true
+    managedNamespaceMetadata:
+      labels:
+        toolkit.fluxcd.io/tenant: sre-team
+        goldilocks.fairwinds.com/enabled: "true"

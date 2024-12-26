@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: ingress-nginx-dashboards
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  goTemplate: true
+  goTemplateOptions: [ "missingkey=error" ]
+  generators:
+    - matrix:
+        generators:
+          - clusters: {}
+          - list:
+              elements:
+                - exposure: public # only make these for public ingresses
+  template:
+    metadata:
+      name: 'ingress-nginx-dashboards-{{.nameNormalized}}'
+      namespace: argocd
+    spec:
+      destination:
+        namespace: 'ingress-nginx-{{.exposure}}'
+        name: '{{.nameNormalized}}'
+      project: default
+      source:
+        path: ingress-nginx-dashboards
+        repoURL: "https://github.com/christensenjairus/ArgoCD-Infra"
+        targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions: []
