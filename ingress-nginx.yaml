@@ -3,6 +3,8 @@ kind: ApplicationSet
 metadata:
   name: ingress-nginx
 spec:
+  goTemplate: true
+  goTemplateOptions: [ "missingkey=error" ]
   generators:
     - clusters: {}
   template:
@@ -18,15 +20,15 @@ spec:
         path: ingress-nginx
         repoURL: "https://github.com/christensenjairus/ArgoCD-Infra"
         targetRevision: main
-      kustomize:
-        patches:
-          - target:
-              kind: Service
-              name: ingress-nginx-controller
-            patch: |-
-              - op: add
-                path: /metadata/annotations/metallb.universe.tf~1loadBalancerIPs
-                value: '{{.metadata.annotations.ipv4LbPrefix}}.{{.lbLastOctetIP}},{{.metadata.annotations.ipv6LbPrefix}}::{{.lbLastOctetIP}}'
+        kustomize:
+          patches:
+            - target:
+                kind: Service
+                name: ingress-nginx-controller
+              patch: |-
+                - op: add
+                  path: /metadata/annotations/metallb.universe.tf~1loadBalancerIPs
+                  value: '{{.metadata.annotations.ipv4LbPrefix}}.200,{{.metadata.annotations.ipv6LbPrefix}}::200'
       syncPolicy:
         automated:
           prune: true
