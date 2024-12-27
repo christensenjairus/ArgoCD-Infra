@@ -1,17 +1,15 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: rook-ceph-external
+  name: rook-ceph
   namespace: argocd
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
 spec:
   destination:
     namespace: rook-ceph-external
     name: argocd-sandbox
   project: default
   source:
-    path: rook-ceph-external
+    path: rook-ceph
     repoURL: "https://github.com/christensenjairus/ArgoCD-Infra"
     targetRevision: main
   syncPolicy:
