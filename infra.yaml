@@ -1,19 +1,40 @@
 apiVersion: argoproj.io/v1alpha1
-kind: Application
+kind: ApplicationSet
 metadata:
-  name: infra
+  name: infra-master
   namespace: argocd
 spec:
-  destination:
-    namespace: argocd
-    server: 'https://kubernetes.default.svc'
-  project: default
-  source:
-    path: appsets
-    repoURL: "https://github.com/christensenjairus/ArgoCD-Infra"
-    targetRevision: main
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions: []
+  goTemplate: true
+  generators:
+    cluster: { }
+  template:
+    metadata:
+      name: 'infra-{{.nameNormalized}}'
+      namespace: argocd
+    spec:
+      destination:
+        namespace: argocd
+        name: '{{.nameNormalized}}'
+      project: default
+      source:
+        path: appsets
+        repoURL: "https://github.com/christensenjairus/ArgoCD-Infra"
+        targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions: []
+      parameters:
+        - name: name
+          value: '{{.name}}'
+        - name: nameNormalized
+          value: '{{.nameNormalized}}'
+        - name: ipv4LbPrefix
+          value: '{{.metadata.annotations.ipv4LbPrefix}}'
+        - name: ipv6LbPrefix
+          value: '{{.metadata.annotations.ipv6LbPrefix}}'
+        - name: radosNamespaceClusterID
+          value: '{{.metadata.annotations.radosNamespaceClusterID}}'
+        - name: subvolumeGroupClusterID
+          value: '{{.metadata.annotations.subvolumeGroupClusterID}}'
