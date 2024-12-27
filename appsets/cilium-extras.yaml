@@ -1,37 +1,31 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: infra-cilium
+  name: infra-cilium-extras
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/sync-wave: "4"
 spec:
   goTemplate: true
   generators:
     - clusters: {}
   template:
     metadata:
-      name: 'infra-cilium-{{.nameNormalized}}'
+      name: 'infra-cilium-extras-{{.nameNormalized}}'
       namespace: argocd
     spec:
       destination:
         namespace: 'kube-system'
         name: '{{.nameNormalized}}'
       project: default
-      sources:
-      - chart: cilium
-        repoURL: "https://helm.cilium.io/"
-        targetRevision: v1.16.4
-        helm:
-          releaseName: cilium
-          valueFiles:
-            - $values/cilium/values.yaml
-      - repoURL: 'https://github.com/christensenjairus/ArgoCD-Infra.git'
+      source:
+        path: cilium-extras
+        repoURL: "https://github.com/christensenjairus/ArgoCD-Infra"
         targetRevision: main
-        ref: values
       syncPolicy:
         automated:
           prune: true
           selfHeal: true
         syncOptions:
+          - ServerSideApply=true
           - CreateNamespace=false
