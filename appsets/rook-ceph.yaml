@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: rook-ceph
+  name: infra-rook-ceph
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "1"
@@ -12,7 +12,7 @@ spec:
     - clusters: {}
   template:
     metadata:
-      name: 'rook-ceph-{{.nameNormalized}}'
+      name: 'infra-rook-ceph-{{.nameNormalized}}'
       namespace: argocd
     spec:
       destination:

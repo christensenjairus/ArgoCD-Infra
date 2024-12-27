@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: common-crds
+  name: infra-common-crds
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "0"
@@ -12,7 +12,7 @@ spec:
     - clusters: {}
   template:
     metadata:
-      name: 'common-crds-{{.nameNormalized}}'
+      name: 'infra-common-crds-{{.nameNormalized}}'
       namespace: argocd
     spec:
       destination:

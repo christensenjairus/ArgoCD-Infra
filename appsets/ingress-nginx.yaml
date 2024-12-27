@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: ingress-nginx
+  name: infra-ingress-nginx
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "2"
@@ -12,7 +12,7 @@ spec:
     - clusters: {}
   template:
     metadata:
-      name: 'ingress-nginx-{{.nameNormalized}}'
+      name: 'infra-ingress-nginx-{{.nameNormalized}}'
       namespace: argocd
     spec:
       destination:
