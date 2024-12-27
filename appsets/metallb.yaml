@@ -16,7 +16,7 @@ spec:
       namespace: argocd
     spec:
       destination:
-        namespace: 'metallb'
+        namespace: 'metallb-system'
         name: '{{.nameNormalized}}'
       project: default
       source:
