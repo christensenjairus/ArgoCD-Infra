@@ -34,7 +34,7 @@ spec:
                   value: '{{.metadata.annotations.cluster-id}}'
                 - op: replace
                   path: /data/cluster-name
-                  value: '{{.nameNormalized}}'
+                  value: "'{{.nameNormalized}}'"
             - target:
                 kind: Ingress
                 name:
