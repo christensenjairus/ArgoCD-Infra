@@ -1,6 +1,6 @@
 cluster:
   id: 0 # REPLACEME
-  name: "REPLACEME"
+  name: "replaceme"
 cni:
   exclusive: false # false needed for Istio ambient
 hubble:
@@ -37,6 +37,7 @@ envoy:
 prometheus:
   serviceMonitor:
     enabled: true
+    trustCRDsExist: true
 operator:
   replicas: 1
   prometheus:
