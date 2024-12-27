@@ -42,8 +42,8 @@ spec:
       ignoreDifferences:
         - group: "monitoring.coreos.com"
           kind: ServiceMonitors
-          jsonPointers:
-            - spec/endpoints/relabelings
+          jqPathExpressions:
+            - .spec.endpoints[].relabelings
       syncPolicy:
         automated:
           prune: true
