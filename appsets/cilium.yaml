@@ -59,7 +59,8 @@ spec:
           - /data/ca.crt
           - /data/tls.crt
           - /data/tls.key
-        - kind: ServiceMonitors
+        - group: "monitoring.coreos.com"
+          kind: ServiceMonitor
           jqPathExpressions:
             - .spec.endpoints[].relabelings
       syncPolicy:
