@@ -59,9 +59,7 @@ spec:
           - /data/ca.crt
           - /data/tls.crt
           - /data/tls.key
-        - group: "monitoring.coreos.com"
-          kind: ServiceMonitors
-          namespaces: kube-system
+        - kind: ServiceMonitors
           jqPathExpressions:
             - .spec.endpoints[].relabelings
       syncPolicy:
