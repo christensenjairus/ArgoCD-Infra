@@ -2,6 +2,8 @@ kind: BucketAccessClass
 apiVersion: objectstorage.k8s.io/v1alpha1
 metadata:
   name: k8s-rgw
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 driverName: ceph.objectstorage.k8s.io
 authenticationType: KEY
 parameters:

@@ -3,5 +3,7 @@ kind: CephFilesystemSubVolumeGroup
 metadata:
   name: argocd-sandbox
   namespace: rook-ceph-external
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   filesystemName: k8s-cephfs

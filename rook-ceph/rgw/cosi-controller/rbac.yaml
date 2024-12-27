@@ -3,6 +3,8 @@ kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: objectstorage-controller-role
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
   labels:
     app.kubernetes.io/part-of: container-object-storage-interface
     app.kubernetes.io/component: controller

@@ -5,3 +5,5 @@ kind: ConfigMap
 metadata:
   name: external-cluster-user-command
   namespace: rook-ceph-external
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"

@@ -3,7 +3,7 @@ kind: Namespace
 metadata:
   name: rook-ceph
   annotations:
-    argocd.argoproj.io/sync-wave: "-2"
+    argocd.argoproj.io/sync-wave: "-1"
   labels:
     toolkit.fluxcd.io/tenant: sre-team
     goldilocks.fairwinds.com/enabled: "true"
@@ -13,7 +13,7 @@ kind: Namespace
 metadata:
   name: rook-ceph-external
   annotations:
-    argocd.argoproj.io/sync-wave: "-2"
+    argocd.argoproj.io/sync-wave: "-1"
   labels:
     toolkit.fluxcd.io/tenant: sre-team
     goldilocks.fairwinds.com/enabled: "true"

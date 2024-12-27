@@ -3,6 +3,8 @@ kind: CephCluster
 metadata:
   name: rook-ceph-external
   namespace: rook-ceph-external
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   external:
     enable: true

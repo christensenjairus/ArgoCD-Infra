@@ -3,5 +3,7 @@ kind: CephBlockPoolRadosNamespace
 metadata:
   name: argocd-sandbox
   namespace: rook-ceph-external
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   blockPoolName: k8s-rbd

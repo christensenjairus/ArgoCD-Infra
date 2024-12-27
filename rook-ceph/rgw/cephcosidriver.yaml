@@ -3,5 +3,7 @@ kind: CephCOSIDriver
 metadata:
   name: ceph-cosi-driver
   namespace: rook-ceph
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   deploymentStrategy: "Auto"

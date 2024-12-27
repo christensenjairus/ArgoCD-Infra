@@ -7,3 +7,5 @@ kind: ConfigMap
 metadata:
   name: rook-ceph-mon-endpoints
   namespace: rook-ceph-external
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"

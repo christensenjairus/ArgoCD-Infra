@@ -3,6 +3,8 @@ kind: CephObjectStore
 metadata:
   name: pve
   namespace: rook-ceph-external
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   gateway:
     port: 8080
