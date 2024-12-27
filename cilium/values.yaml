@@ -4,15 +4,11 @@ hubble:
   enabled: true
   relay:
     enabled: true
-    nodeSelector:
-      nodeclass: general
     prometheus:
       serviceMonitor:
         enabled: true
   ui:
     enabled: true
-    nodeSelector:
-      nodeclass: general
   metrics:
     serviceMonitor:
       enabled: true
@@ -43,8 +39,6 @@ prometheus:
     enabled: true
 operator:
   replicas: 1
-  nodeSelector:
-    nodeclass: general
   prometheus:
     serviceMonitor:
       enabled: true
@@ -72,8 +66,6 @@ externalWorkloads:
 #  useAPIServer: true
 #  apiserver:
 #    replicas: 2
-#    nodeSelector:
-#      nodeclass: general
 #    kvstoremesh:
 #      enabled: true
 #    metrics:
