@@ -62,8 +62,8 @@ gatewayAPI:
   enabled: true
 externalWorkloads:
   enabled: true
-#clustermesh:
-#  useAPIServer: true
+clustermesh:
+  useAPIServer: false
 #  apiserver:
 #    replicas: 2
 #    kvstoremesh:
