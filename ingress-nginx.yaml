@@ -33,9 +33,4 @@ spec:
         automated:
           prune: true
           selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
-        managedNamespaceMetadata:
-          labels:
-            toolkit.fluxcd.io/tenant: sre-team
-            goldilocks.fairwinds.com/enabled: "true"
+        syncOptions: []
