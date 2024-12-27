@@ -17,7 +17,7 @@ spec:
       helm:
         releaseName: rook-ceph
         valueFiles:
-          - $values/storage/values.yaml
+          - $values/rook-ceph/values.yaml
     - repoURL: 'https://github.com/christensenjairus/ArgoCD-Infra.git'
       targetRevision: main
       ref: values

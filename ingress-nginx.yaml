@@ -2,67 +2,38 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: ingress-nginx
-  annotations:
-    argocd.argoproj.io/sync-wave: "3"
 spec:
-  goTemplate: true
-  goTemplateOptions: [ "missingkey=error" ]
   generators:
-    - matrix:
-        generators:
-          - clusters: {}
-          - list:
-              elements:
-                - exposure: public
-                  lbLastOctetIP: 200
-                  sourceRange: '0.0.0.0/0,::/0'
-                - exposure: private
-                  lbLastOctetIP: 201
-                  sourceRange: '10.0.0.0/8,2607:fa18:47fd::/48'
+    - clusters: {}
   template:
     metadata:
-      name: 'ingress-nginx-{{.exposure}}-{{.nameNormalized}}'
+      name: 'ingress-nginx-{{.nameNormalized}}'
       namespace: argocd
-      annotations:
-        argocd.argoproj.io/sync-wave: "1"
     spec:
       destination:
-        namespace: 'ingress-nginx-{{.exposure}}'
+        namespace: 'ingress-nginx'
         name: '{{.nameNormalized}}'
       project: default
-      sources:
-      - chart: ingress-nginx
-        repoURL: "https://kubernetes.github.io/ingress-nginx"
-        targetRevision: 4.11.3
-        helm:
-          releaseName: 'ingress-nginx-{{.exposure}}'
-          valueFiles:
-            - $values/ingress/values.yaml
-          valuesObject:
-            controller:
-              config:
-                whitelist-source-range: '{{.sourceRange}}'
-              extraArgs:
-                tcp-services-configmap: 'ingress-nginx-{{.exposure}}/tcp-services'
-                udp-services-configmap: 'ingress-nginx-{{.exposure}}/udp-services'
-              ingressClassResource:
-                name: 'nginx-{{.exposure}}'
-                controllerValue: 'k8s.io/nginx-{{.exposure}}'
-              ingressClass: 'nginx-{{.exposure}}'
-              metrics:
-                serviceMonitor:
-                  namespace: 'ingress-nginx-{{.exposure}}'
-                  namespaceSelector:
-                    matchNames:
-                      - 'ingress-nginx-{{.exposure}}'
-              service:
-                annotations:
-                  metallb.universe.tf/loadBalancerIPs: '{{.metadata.annotations.ipv4LbPrefix}}.{{.lbLastOctetIP}},{{.metadata.annotations.ipv6LbPrefix}}::{{.lbLastOctetIP}}'
-      - repoURL: 'https://github.com/christensenjairus/ArgoCD-Infra.git'
+      source:
+        path: ingress-nginx
+        repoURL: "https://github.com/christensenjairus/ArgoCD-Infra"
         targetRevision: main
-        ref: values
+      kustomize:
+        patches:
+          - target:
+              kind: Service
+              name: ingress-nginx-controller
+            patch: |-
+              - op: add
+                path: /metadata/annotations/metallb.universe.tf~1loadBalancerIPs
+                value: '{{.metadata.annotations.ipv4LbPrefix}}.{{.lbLastOctetIP}},{{.metadata.annotations.ipv6LbPrefix}}::{{.lbLastOctetIP}}'
       syncPolicy:
         automated:
           prune: true
           selfHeal: true
-        syncOptions: []
+        syncOptions:
+          - CreateNamespace=true
+        managedNamespaceMetadata:
+          labels:
+            toolkit.fluxcd.io/tenant: sre-team
+            goldilocks.fairwinds.com/enabled: "true"
