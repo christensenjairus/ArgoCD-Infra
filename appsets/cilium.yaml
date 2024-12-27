@@ -4,15 +4,14 @@ metadata:
   name: infra-cilium
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   goTemplate: true
-  goTemplateOptions: [ "missingkey=error" ]
   generators:
     - clusters: {}
   template:
     metadata:
-      name: 'infra-ciluim-{{.nameNormalized}}'
+      name: 'infra-cilium-{{.nameNormalized}}'
       namespace: argocd
     spec:
       destination:
@@ -30,11 +29,11 @@ spec:
                 name: cilium-config
               patch: |-
                 - op: replace
-                  path: /data/cluster-id
-                  value: "{{.metadata.annotations.cluster-id}}"
+                  path: /data/"cluster-id"
+                  value: '{{.metadata.annotations.cluster-id}}'
                 - op: replace
-                  path: /data/cluster-name
-                  value: "{{.nameNormalized}}"
+                  path: /data/"cluster-name"
+                  value: '{{.nameNormalized}}'
             - target:
                 kind: Ingress
                 name:
