@@ -3,7 +3,7 @@ kind: GrafanaDashboard
 metadata:
   name: cilium-agent-metrics-v1.12
   annotations:
-    argocd.argoproj.io/sync-options: Validate=false
+    argocd.argoproj.io/sync-options: Validate=false # doesn't like null values
 spec:
   # https://grafana.github.io/grafana-operator/docs/dashboards/
   resyncPeriod: 30s
