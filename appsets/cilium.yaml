@@ -27,12 +27,13 @@ spec:
             - target:
                 kind: ConfigMap
                 name: cilium-config
+                namespace: kube-system
               patch: |-
                 - op: replace
-                  path: /data/"cluster-id"
+                  path: /data/cluster-id
                   value: '{{.metadata.annotations.cluster-id}}'
                 - op: replace
-                  path: /data/"cluster-name"
+                  path: /data/cluster-name
                   value: '{{.nameNormalized}}'
             - target:
                 kind: Ingress
