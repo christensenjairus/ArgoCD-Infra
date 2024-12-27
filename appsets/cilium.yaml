@@ -28,7 +28,7 @@ spec:
             - $values/cilium/values.yaml
           valuesObject:
             cluster:
-              id: '{{.metadata.annotations.cluster-id}}'
+              id: '{{.metadata.annotations.clusterId}}'
               name: '{{.nameNormalized}}'
             clustermesh:
               apiserver:
@@ -45,4 +45,4 @@ spec:
           prune: true
           selfHeal: true
         syncOptions:
-          - CreateNamespace=true
+          - CreateNamespace=false
