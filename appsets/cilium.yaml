@@ -27,15 +27,15 @@ spec:
           valueFiles:
             - $values/cilium/values.yaml
           valuesObject:
-            cluster:
-              id: {{ .metadata.annotations.clusterId | atoi }}
-              name: '{{.nameNormalized}}'
-            clustermesh:
-              apiserver:
-                service:
-                  type: LoadBalancer
-                  annotations:
-                    metallb.universe.tf/loadBalancerIPs: '{{.metadata.annotations.ipv4LbPrefix}}.254'
+#            cluster:
+#              id: {{ .metadata.annotations.clusterId | atoi }}
+#              name: '{{.nameNormalized}}'
+#            clustermesh:
+#              apiserver:
+#                service:
+#                  type: LoadBalancer
+#                  annotations:
+#                    metallb.universe.tf/loadBalancerIPs: '{{.metadata.annotations.ipv4LbPrefix}}.254'
             k8sServiceHost: '{{.metadata.annotations.ipv4LbPrefix}}.100'
       - repoURL: 'https://github.com/christensenjairus/ArgoCD-Infra.git'
         targetRevision: main
