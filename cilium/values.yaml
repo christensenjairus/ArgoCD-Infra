@@ -1,5 +1,3 @@
-cluster:
-  id: 1
 cni:
   exclusive: false # false needed for Istio ambient
 hubble:
