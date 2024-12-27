@@ -6,9 +6,14 @@ metadata:
 spec:
   destination:
     namespace: argocd
-    server: argocd-sandbox # master argocd
+    server: 'https://kubernetes.default.svc'
   project: default
   source:
     path: appsets
     repoURL: "https://github.com/christensenjairus/ArgoCD-Infra"
     targetRevision: main
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions: []
