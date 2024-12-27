@@ -9,6 +9,8 @@ metadata:
   annotations:
     ipv4LbPrefix: "10.0.8"
     ipv6LbPrefix: "2607:fa18:47fd:800:34"
+    radosNamespaceClusterID: "b948e2030db64cc942710b08d7aecb91"
+    subvolumeGroupClusterID: "c91cb01333dcfbca965d6e9386b40e8a"
 type: Opaque
 stringData:
   name: "argocd-sandbox"

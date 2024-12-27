@@ -4,7 +4,7 @@ kind: StorageClass
 metadata:
   name: k8s-cephfs
 parameters:
-  clusterID: "c91cb01333dcfbca965d6e9386b40e8a"
+  clusterID: "<REPLACEME>"
   csi.storage.k8s.io/controller-expand-secret-name: rook-csi-cephfs-provisioner
   csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph-external
   csi.storage.k8s.io/node-stage-secret-name: rook-csi-cephfs-node
