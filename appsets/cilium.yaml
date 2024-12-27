@@ -56,3 +56,4 @@ spec:
           selfHeal: true
         syncOptions:
           - ServerSideApply=true
+          - CreateNamespace=false
