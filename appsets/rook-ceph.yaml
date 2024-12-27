@@ -1,19 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
-kind: Application #Set
+kind: ApplicationSet
 metadata:
   name: rook-ceph
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "1"
 spec:
-#  goTemplate: true
-#  generators:
-#    - clusters: {}
-#  template:
-#    metadata:
-#      name: 'rook-ceph-{{.nameNormalized}}'
-#      namespace: argocd
-#    spec:
+  goTemplate: true
+  goTemplateOptions: [ "missingkey=error" ]
+  generators:
+    - clusters: {}
+  template:
+    metadata:
+      name: 'rook-ceph-{{.nameNormalized}}'
+      namespace: argocd
+    spec:
       destination:
         namespace: rook-ceph-external
         name: '{{.nameNormalized}}'
@@ -30,28 +31,28 @@ spec:
               patch: |-
                 - op: replace
                   path: /parameters/clusterID
-                  value: '{{.radosNamespaceClusterID}}'
+                  value: '{{.metadata.annotations.radosNamespaceClusterID}}'
             - target:
                 kind: VolumeSnapshotClass
                 name: k8s-cephfs
               patch: |-
                 - op: replace
                   path: /parameters/clusterID
-                  value: '{{.subvolumeGroupClusterID}}'
+                  value: '{{.metadata.annotations.subvolumeGroupClusterID}}'
             - target:
                 kind: StorageClass
                 name: k8s-rbd
               patch: |-
                 - op: replace
                   path: /parameters/clusterID
-                  value: '{{.radosNamespaceClusterID}}'
+                  value: '{{.metadata.annotations.radosNamespaceClusterID}}'
             - target:
                 kind: StorageClass
                 name: k8s-cephfs
               patch: |-
                 - op: replace
                   path: /parameters/clusterID
-                  value: '{{.subvolumeGroupClusterID}}'
+                  value: '{{.metadata.annotations.subvolumeGroupClusterID}}'
       syncPolicy:
         automated:
           prune: true

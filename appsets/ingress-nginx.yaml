@@ -1,19 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
-kind: Application #Set
+kind: ApplicationSet
 metadata:
   name: ingress-nginx
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "2"
 spec:
-#  goTemplate: true
-#  generators:
-#    - clusters: {}
-#  template:
-#    metadata:
-#      name: 'ingress-nginx-{{.nameNormalized}}'
-#      namespace: argocd
-#    spec:
+  goTemplate: true
+  goTemplateOptions: [ "missingkey=error" ]
+  generators:
+    - clusters: {}
+  template:
+    metadata:
+      name: 'ingress-nginx-{{.nameNormalized}}'
+      namespace: argocd
+    spec:
       destination:
         namespace: 'ingress-nginx'
         name: '{{.nameNormalized}}'

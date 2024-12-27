@@ -1,19 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
-kind: Application #Set
+kind: ApplicationSet
 metadata:
   name: common-crds
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "0"
 spec:
-#  goTemplate: true
-#  generators:
-#    - clusters: {}
-#  template:
-#    metadata:
-#      name: 'common-crds-{{.nameNormalized}}'
-#      namespace: argocd
-#    spec:
+  goTemplate: true
+  goTemplateOptions: [ "missingkey=error" ]
+  generators:
+    - clusters: {}
+  template:
+    metadata:
+      name: 'common-crds-{{.nameNormalized}}'
+      namespace: argocd
+    spec:
       destination:
         namespace: default
         name: '{{.nameNormalized}}'
