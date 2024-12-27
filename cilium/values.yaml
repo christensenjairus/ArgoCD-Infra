@@ -1,6 +1,3 @@
-cluster:
-  id: 0 # REPLACEME
-  name: "replaceme"
 cni:
   exclusive: false # false needed for Istio ambient
 hubble:
