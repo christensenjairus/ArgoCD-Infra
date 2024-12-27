@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: infra
+  namespace: argocd
+spec:
+  destination:
+    namespace: argocd
+    server: argocd-sandbox # master argocd
+  project: default
+  source:
+    path: appsets
+    repoURL: "https://github.com/christensenjairus/ArgoCD-Infra"
+    targetRevision: main
