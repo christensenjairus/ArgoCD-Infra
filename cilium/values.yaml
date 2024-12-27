@@ -64,8 +64,8 @@ externalWorkloads:
   enabled: true
 clustermesh:
   useAPIServer: false
-#  apiserver:
-#    replicas: 2
+  apiserver:
+    replicas: 0
 #    kvstoremesh:
 #      enabled: true
 #    metrics:
