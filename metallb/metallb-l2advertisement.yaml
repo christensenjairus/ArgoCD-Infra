@@ -1,0 +1,9 @@
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: metallb-l2advertisement
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  ipAddressPools:
+  - metallb-ipaddresspool

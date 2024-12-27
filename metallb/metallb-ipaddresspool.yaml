@@ -1,0 +1,13 @@
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: metallb-ipaddresspool
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  addresses:
+  - "REPLACEME-IPV4"
+  - "REPLACEME-IPV6"
+  autoAssign: true
+  avoidBuggyIPs: true
