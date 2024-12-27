@@ -53,9 +53,6 @@ operator:
       enabled: true
   dashboards:
     enabled: false # imported directly into victoriametrics
-proxy:
-  prometheus:
-    enabled: true
 dashboards:
   enabled: false # imported directly into victoriametrics
 loadBalancer:
