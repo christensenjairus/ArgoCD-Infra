@@ -40,6 +40,25 @@ spec:
                     nginx.ingress.kubernetes.io/auth-signin: 'https://auth.christensencloud.us?rm=$request_method'
                     nginx.ingress.kubernetes.io/auth-response-headers: 'Remote-User,Remote-Name,Remote-Groups,Remote-Email'
       ignoreDifferences:
+        - group: ""
+          kind: ConfigMap
+          name: hubble-ca-cert
+          jsonPointers:
+          - /data/ca.crt
+        - group: ""
+          kind: Secret
+          name: hubble-relay-client-certs
+          jsonPointers:
+          - /data/ca.crt
+          - /data/tls.crt
+          - /data/tls.key
+        - group: ""
+          kind: Secret
+          name: hubble-server-certs
+          jsonPointers:
+          - /data/ca.crt
+          - /data/tls.crt
+          - /data/tls.key
         - group: "monitoring.coreos.com"
           kind: ServiceMonitors
           jqPathExpressions:
