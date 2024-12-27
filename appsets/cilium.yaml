@@ -61,6 +61,7 @@ spec:
           - /data/tls.key
         - group: "monitoring.coreos.com"
           kind: ServiceMonitors
+          namespaces: kube-system
           jqPathExpressions:
             - .spec.endpoints[].relabelings
       syncPolicy:
