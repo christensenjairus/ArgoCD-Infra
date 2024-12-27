@@ -9,4 +9,5 @@ resources:
   - ./cosi
   - ./redis-operator
   - ./kubevirt-operator
+  - ./grafana-operator
 
