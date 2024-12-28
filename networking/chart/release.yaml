@@ -23,7 +23,11 @@ spec:
       id: 1
       name: replaceme
     k8sServiceHost: replaceme
-
+    clustermesh:
+      apiserver:
+        service:
+          annotations:
+            metallb.universe.tf/loadBalancerIPs: replaceme
   valuesFrom:
     - kind: ConfigMap
       name: cilium-values
