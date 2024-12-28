@@ -37,3 +37,9 @@ spec:
           selfHeal: true
         syncOptions:
           - CreateNamespace=false
+      ignoreDifferences:
+        - group: apps
+          kind: DaemonSet
+          name: cilium
+          jsonPointers:
+            - /spec/template/spec/containers/0/volumeMounts/0
