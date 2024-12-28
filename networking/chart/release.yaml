@@ -21,7 +21,9 @@ spec:
   values:
     cluster:
       id: 1
-      name: fixme
+      name: replaceme
+    k8sServiceHost: replaceme
+
   valuesFrom:
     - kind: ConfigMap
       name: cilium-values
