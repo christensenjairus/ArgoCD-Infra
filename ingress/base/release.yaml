@@ -382,7 +382,6 @@ spec:
       ##
       nodeSelector:
         kubernetes.io/os: linux
-        nodeclass: general
       ## Liveness and readiness probe values
       ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
       ##
@@ -922,7 +921,6 @@ spec:
             enabled: false
           nodeSelector:
             kubernetes.io/os: linux
-            nodeclass: general
           tolerations: [ ]
           # -- Labels to be added to patch job resources
           labels: { }
@@ -1124,7 +1122,6 @@ spec:
       ##
       nodeSelector:
         kubernetes.io/os: linux
-        nodeclass: general
       # -- Annotations to be added to default backend pods
       ##
       podAnnotations: { }

@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: infra-ingress-nginx
+  name: infra-ingress
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "2"
@@ -11,15 +11,15 @@ spec:
     - clusters: {}
   template:
     metadata:
-      name: 'infra-ingress-{{.nameNormalized}}'
+      name: 'infra-ingress-test-{{.nameNormalized}}'
       namespace: argocd
     spec:
       destination:
-        namespace: 'ingress'
+        namespace: 'ingress-nginx'
         name: '{{.nameNormalized}}'
       project: default
       source:
-        path: ingress
+        path: 'ingress/overlays'
         repoURL: "https://github.com/christensenjairus/ArgoCD-Infra"
         targetRevision: main
 #        kustomize:
