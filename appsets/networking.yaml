@@ -48,16 +48,16 @@ spec:
                 kind: Ingress
                 name: hubble
             - patch: |
-                - op: replace
+                - op: add
                   path: /spec/values/cluster/id
                   value: {{.metadata.annotations.clusterID}}
-                - op: replace
+                - op: add
                   path: /spec/values/cluster/name
                   value: {{.nameNormalized}}
-                - op: replace
+                - op: add
                   path: /spec/values/k8sServiceHost
                   value: "{{.metadata.annotations.ipv4LbPrefix}}.100"
-                - op: replace
+                - op: add
                   path: /spec/values/clustermesh/apiserver/service/annotations/metallb.universe.tf~1loadBalancerIPs
                   value: "{{.metadata.annotations.ipv4LbPrefix}}.254"
               target:
