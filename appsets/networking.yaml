@@ -43,3 +43,7 @@ spec:
           name: cilium
           jsonPointers:
             - /spec/template/spec/containers/0/volumeMounts/0
+        - group: "*"
+          kind: "*"
+          managedFieldsManagers:
+            - cilium
