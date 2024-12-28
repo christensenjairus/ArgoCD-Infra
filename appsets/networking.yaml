@@ -22,12 +22,6 @@ spec:
       - path: networking
         repoURL: "https://github.com/christensenjairus/ArgoCD-Infra"
         targetRevision: main
-#        helm:
-#          releaseName: cilium
-#          valueFiles:
-#            - $values/cilium/values.yaml
-#          valuesObject:
-#            k8sServiceHost: '{{.metadata.annotations.ipv4LbPrefix}}.100'
         kustomize:
           patches:
             - patch: |
@@ -73,6 +67,7 @@ spec:
         syncOptions:
           - CreateNamespace=false
           - ServerSideApply=true
+          - Validate=false
       ignoreDifferences:
         - group: apps
           kind: DaemonSet
