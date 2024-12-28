@@ -18,6 +18,10 @@ spec:
         name: cilium
         namespace: kube-system
       interval: 12h
+    values:
+      cluster:
+        id: 1
+        name: replaceme
     valuesFrom:
       - kind: ConfigMap
         name: cilium-values
