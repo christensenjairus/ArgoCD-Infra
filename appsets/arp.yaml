@@ -1,36 +1,39 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: infra-ingress
+  name: infra-arp
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   goTemplate: true
   generators:
     - clusters: {}
   template:
     metadata:
-      name: 'infra-ingress-{{.nameNormalized}}'
+      name: 'infra-arp-{{.nameNormalized}}'
       namespace: argocd
     spec:
       destination:
-        namespace: 'ingress-nginx'
+        namespace: 'metallb-system'
         name: '{{.nameNormalized}}'
       project: default
       source:
-        path: ingress
+        path: arp
         repoURL: "https://github.com/christensenjairus/ArgoCD-Infra"
         targetRevision: main
         kustomize:
           patches:
             - target:
-                kind: Service
-                name: ingress-nginx-controller
+                kind: IPAddressPool
+                name: metallb-ipaddresspool
               patch: |-
-                - op: add
-                  path: /metadata/annotations/metallb.universe.tf~1loadBalancerIPs
-                  value: '{{.metadata.annotations.ipv4LbPrefix}}.200,{{.metadata.annotations.ipv6LbPrefix}}::200'
+                - op: replace
+                  path: /spec/addresses/0
+                  value: "{{.metadata.annotations.ipv4LbPrefix}}.200-{{.metadata.annotations.ipv4LbPrefix}}.254"
+                - op: replace
+                  path: /spec/addresses/1
+                  value: "{{.metadata.annotations.ipv6LbPrefix}}::/112"
       syncPolicy:
         automated:
           prune: true

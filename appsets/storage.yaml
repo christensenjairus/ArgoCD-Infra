@@ -1,0 +1,59 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: infra-storage
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  goTemplate: true
+  generators:
+    - clusters: {}
+  template:
+    metadata:
+      name: 'infra-storage-{{.nameNormalized}}'
+      namespace: argocd
+    spec:
+      destination:
+        namespace: rook-ceph-external
+        name: '{{.nameNormalized}}'
+      project: default
+      source:
+        path: storage
+        repoURL: "https://github.com/christensenjairus/ArgoCD-Infra"
+        targetRevision: main
+        kustomize:
+          patches:
+            - target:
+                kind: VolumeSnapshotClass
+                name: k8s-rbd
+              patch: |-
+                - op: replace
+                  path: /parameters/clusterID
+                  value: '{{.metadata.annotations.radosNamespaceClusterID}}'
+            - target:
+                kind: VolumeSnapshotClass
+                name: k8s-cephfs
+              patch: |-
+                - op: replace
+                  path: /parameters/clusterID
+                  value: '{{.metadata.annotations.subvolumeGroupClusterID}}'
+            - target:
+                kind: StorageClass
+                name: k8s-rbd
+              patch: |-
+                - op: replace
+                  path: /parameters/clusterID
+                  value: '{{.metadata.annotations.radosNamespaceClusterID}}'
+            - target:
+                kind: StorageClass
+                name: k8s-cephfs
+              patch: |-
+                - op: replace
+                  path: /parameters/clusterID
+                  value: '{{.metadata.annotations.subvolumeGroupClusterID}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions: []

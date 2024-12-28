@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: infra-crds
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  goTemplate: true
+  generators:
+    - clusters: {}
+  template:
+    metadata:
+      name: 'infra-crds-{{.nameNormalized}}'
+      namespace: argocd
+    spec:
+      destination:
+        namespace: default
+        name: '{{.nameNormalized}}'
+      project: default
+      source:
+        path: crds
+        repoURL: "https://github.com/christensenjairus/ArgoCD-Infra"
+        targetRevision: main
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - ServerSideApply=true
